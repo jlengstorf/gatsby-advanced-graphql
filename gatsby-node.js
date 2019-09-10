@@ -64,42 +64,6 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         body: String! @proxyResolve(from: "parent.html")
       }
     `,
-    // schema.buildObjectType({
-    //   name: "BlogPostMarkdown",
-    //   interfaces: ["Node", "BlogPost"],
-    //   extensions: {
-    //     childOf: {
-    //       type: "MarkdownRemark",
-    //     },
-    //   },
-    //   fields: {
-    //     id: "ID!",
-    //     title: {
-    //       type: "String!",
-    //       resolve: async (source, _args, context) => {
-    //         const parent = await context.nodeModel.getNodeById({
-    //           id: source.parent,
-    //         })
-
-    //         return parent.frontmatter.title
-    //       },
-    //     },
-    //     date: {
-    //       type: "Date",
-    //       extensions: {
-    //         dateformat: {},
-    //       },
-    //     },
-    //     body: {
-    //       type: "String!",
-    //       extensions: {
-    //         proxyResolve: {
-    //           from: "parent.html",
-    //         },
-    //       },
-    //     },
-    //   },
-    // }),
   ])
 }
 
