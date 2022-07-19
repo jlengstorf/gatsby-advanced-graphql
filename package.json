@@ -13,17 +13,16 @@
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing \""
   },
   "dependencies": {
-    "gatsby": "^2.15.14",
-    "gatsby-source-filesystem": "^2.1.22",
-    "gatsby-transformer-json": "^2.2.8",
-    "gatsby-transformer-remark": "^2.6.22",
-    "gatsby-transformer-yaml": "^2.2.9",
-    "lodash.get": "^4.4.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "gatsby": "^4.18.2",
+    "gatsby-source-filesystem": "^4.18.1",
+    "gatsby-transformer-json": "^4.18.0",
+    "gatsby-transformer-remark": "^5.18.1",
+    "gatsby-transformer-yaml": "^4.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "prettier": "^2.7.1"
   },
   "repository": {
     "type": "git",

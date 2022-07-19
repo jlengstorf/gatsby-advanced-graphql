@@ -3,7 +3,7 @@ import { graphql } from "gatsby"
 
 export const query = graphql`
   {
-    allBlogPost {
+    allBlogPostMarkdown {
       nodes {
         id
         title
@@ -13,9 +13,9 @@ export const query = graphql`
   }
 `
 
-export default ({ data }) => (
+const HomePage =  ({ data }) => (
   <>
-    {data.allBlogPost.nodes.map(post => (
+    {data.allBlogPostMarkdown.nodes.map(post => (
       <div key={post.id}>
         <h2>{post.title}</h2>
         <div dangerouslySetInnerHTML={{ __html: post.body }} />
@@ -23,3 +23,5 @@ export default ({ data }) => (
     ))}
   </>
 )
+
+export default HomePage;

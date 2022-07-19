@@ -1,34 +1,22 @@
-const get = require("lodash.get")
+const mdResolverPassthrough = (fieldName) => async (source, args, context, info) => {
+  const type = info.schema.getType(`MarkdownRemark`)
+  const mdNode = context.nodeModel.getNodeById({
+    id: source.parent,
+  })
+  const resolver = type.getFields()[fieldName].resolve
+  const result = await resolver(mdNode, args, context, info)
+  return result
+}
 
-exports.createSchemaCustomization = ({ actions, schema }) => {
-  const splitProxyString = str =>
-    str.split(".").reduceRight((acc, chunk) => {
-      return { [chunk]: acc }
-    }, true)
-
+exports.createSchemaCustomization = ({ actions }) => {
   actions.createFieldExtension({
-    name: "proxyResolve",
+    name: "mdpassthrough",
     args: {
-      from: { type: "String!" },
+      fieldName: `String!`,
     },
-    extend: (options, previousFieldConfig) => {
+    extend({ fieldName }) {
       return {
-        resolve: async (source, args, context, info) => {
-          await context.nodeModel.prepareNodes(
-            info.parentType, // BlogPostMarkdown
-            splitProxyString(options.from), // querying for html field
-            splitProxyString(options.from), // resolve this field
-            [info.parentType.name] // The types to use are these
-          )
-
-          const newSource = await context.nodeModel.runQuery({
-            type: info.parentType,
-            query: { filter: { id: { eq: source.id } } },
-            firstOnly: true,
-          })
-
-          return get(newSource.__gatsby_resolved, options.from)
-        },
+        resolve: mdResolverPassthrough(fieldName),
       }
     },
   })
@@ -59,9 +47,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 
       type BlogPostMarkdown implements Node & BlogPost @dontInfer @childOf(type: "MarkdownRemark") {
         id: ID!
-        title: String! @proxyResolve(from: "parent.frontmatter.title")
-        date: Date @dateformat @proxyResolve(from: "parent.frontmatter.date")
-        body: String! @proxyResolve(from: "parent.html")
+        title: String!
+        date: Date @dateformat
+        body: String! @mdpassthrough(fieldName: "html")
       }
     `,
   ])
@@ -75,6 +63,8 @@ exports.onCreateNode = ({ node, actions, createNodeId }) => {
   actions.createNode({
     id: createNodeId(`BlogPostMarkdown-${node.id}`),
     parent: node.id,
+    title: node.frontmatter.title,
+    date: node.frontmatter.date,
     internal: {
       type: "BlogPostMarkdown",
       contentDigest: node.internal.contentDigest,
